@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NTA Exam Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar for the palette to match the sleek feel */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen bg-white font-sans text-sm text-gray-800 selection:bg-blue-200 overflow-hidden">
+
+    <!-- Top Thin Blue Bar -->
+    <div class="bg-[#1d4ed8] h-8 flex justify-end items-center px-6 text-white text-xs shrink-0">
+        <span>A- | A | A+</span>
+    </div>
+
+    <!-- Main Header -->
+    <div class="bg-white h-20 flex items-center justify-between px-6 border-b-2 border-gray-200 shadow-sm relative z-10 shrink-0">
+        <div class="flex items-center space-x-6">
+            <div class="flex flex-col text-[#b17a42] font-serif leading-tight items-center border-r pr-4">
+                <span class="text-xl font-bold">15</span>
+                <span class="text-[10px]">YEARS OF</span>
+                <span class="text-[10px]">CELEBRATING</span>
+                <span class="text-[10px]">THE MAHATMA</span>
+            </div>
+            
+            <div class="flex flex-col ml-4">
+                <h1 class="text-xl font-bold text-[#1a365d] flex items-center gap-2">
+                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center overflow-hidden relative">
+                    <div class="absolute w-full h-1/2 bg-orange-500 top-0"></div>
+                    <div class="absolute w-4 h-4 bg-white rounded-full"></div>
+                </div>
+                राष्ट्रीय परीक्षा एजेंसी <br/> National Testing Agency
+                </h1>
+                <span class="text-xs text-green-700 font-bold ml-10 -mt-1 tracking-wider">Excellence in Assessment</span>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-8">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-gray-200 border border-gray-400 rounded-full flex items-center justify-center">
+                    <span class="text-gray-500 text-[10px]">GOI</span>
+                </div>
+                <div class="flex flex-col">
+                <span class="font-bold text-[#1a365d] text-base leading-none">Ministry of Education</span>
+                <span class="text-xs text-gray-500 leading-none mt-1">Government of India</span>
+                </div>
+            </div>
+            
+            <div class="flex flex-col items-center">
+                <span class="text-blue-800 font-bold italic text-lg leading-none">75</span>
+                <span class="text-[10px] text-blue-900 leading-none mt-1 text-center">Azadi Ka<br/>Amrit Mahotsav</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Candidate Information Bar -->
+    <div class="bg-gray-100 p-2 px-6 flex items-center border-b shadow-inner shrink-0">
+        <div class="w-20 h-24 bg-gray-300 border border-gray-400 mr-4 flex items-center justify-center rounded overflow-hidden shadow-sm">
+            <!-- User Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500 mt-6"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="flex flex-col justify-center flex-1 space-y-1">
+            <div class="flex"><span class="w-32 text-gray-600">Candidate Name :</span> <span class="font-bold text-orange-500">[Your Name]</span></div>
+            <div class="flex"><span class="w-32 text-gray-600">Exam Name :</span> <span class="font-bold text-orange-500">CUET PG - SCQP09</span></div>
+            <div class="flex"><span class="w-32 text-gray-600">Subject Name :</span> <span class="font-bold text-orange-500">Computer Science</span></div>
+            <div class="flex items-center">
+                <span class="w-32 text-gray-600">Remaining Time :</span> 
+                <span class="bg-[#0ea5e9] text-white px-3 py-0.5 rounded-full font-bold flex items-center shadow-sm">
+                    <!-- Clock Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span id="timer-display">02:00:00</span>
+                </span>
+            </div>
+        </div>
+        <div class="ml-auto flex flex-col justify-start h-full pt-2">
+            <select class="border border-gray-300 rounded px-2 py-1 bg-white outline-none w-48 text-gray-700 shadow-sm">
+                <option>English</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-row overflow-hidden bg-white">
+        
+        <!-- Left Side: Question Area -->
+        <div class="flex-1 flex flex-col border-r border-gray-300 relative pb-16">
+            
+            <!-- Question Header -->
+            <div class="flex justify-between items-center p-3 border-b border-gray-200 shrink-0">
+                <h2 class="font-bold text-lg text-black">Question <span id="q-id-display">1</span>:</h2>
+                <div class="flex flex-col">
+                <button class="bg-blue-500 text-white rounded-full p-0.5 mb-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                </div>
+            </div>
+
+            <!-- Question Scrollable Body -->
+            <div class="flex-1 overflow-y-auto p-8 scroll-smooth">
+                <div id="q-text-container" class="text-xl text-black font-medium leading-relaxed max-w-full border-b pb-6 mb-6">
+                    <!-- Question Text Injection -->
+                </div>
+
+                <div id="q-options-container" class="space-y-6 ml-4 mb-12 max-w-full">
+                    <!-- Options Injection -->
+                </div>
+
+                <!-- Radio Buttons Area -->
+                <div id="radio-buttons-container" class="max-w-full mx-auto flex items-center justify-around border-t border-gray-200 pt-8 mt-4">
+                    <!-- Radios Injection -->
+                </div>
+            </div>
+
+            <!-- Bottom Action Bar -->
+            <div class="absolute bottom-0 w-full border-t border-gray-300 bg-white p-3 flex justify-between items-center z-10 shrink-0">
+                <div class="flex gap-2">
+                <button onclick="handleSaveAndNext()" class="bg-[#22c55e] hover:bg-green-600 text-white font-bold py-2 px-4 rounded shadow-sm uppercase text-xs border border-green-700 transition-colors">Save & Next</button>
+                <button onclick="handleClear()" class="bg-white hover:bg-gray-50 text-gray-800 font-bold py-2 px-4 rounded shadow-sm border border-gray-300 uppercase text-xs transition-colors">Clear</button>
+                <button onclick="handleSaveAndMarkForReview()" class="bg-[#f97316] hover:bg-orange-600 text-white font-bold py-2 px-4 rounded shadow-sm border border-orange-700 uppercase text-xs transition-colors">Save & Mark For Review</button>
+                <button onclick="handleMarkForReviewAndNext()" class="bg-[#3b82f6] hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow-sm border border-blue-700 uppercase text-xs transition-colors">Mark For Review & Next</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Palette and Navigation -->
+        <div class="w-80 flex flex-col bg-[#f8fafc] h-full shadow-inner relative pb-14 shrink-0">
+            
+            <!-- Legend Panel -->
+            <div class="p-4 border-b border-gray-200 bg-white shrink-0">
+                <div class="grid grid-cols-2 gap-4 gap-x-2">
+                
+                <div class="flex items-center">
+                    <div id="stat-not-visited" class="w-8 h-8 bg-[#e5e7eb] border border-gray-300 rounded text-black font-bold flex items-center justify-center shadow-sm">0</div>
+                    <span class="text-xs ml-2 text-gray-600">Not Visited</span>
+                </div>
+
+                <div class="flex items-center">
+                    <div id="stat-not-answered" class="w-8 h-8 bg-[#ef4444] text-white font-bold flex items-center justify-center shadow-sm" style="clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%)">0</div>
+                    <span class="text-xs ml-2 text-gray-600">Not Answered</span>
+                </div>
+
+                <div class="flex items-center">
+                    <div id="stat-answered" class="w-8 h-8 bg-[#22c55e] text-white font-bold flex items-center justify-center shadow-sm" style="clip-path: polygon(50% 0, 100% 20%, 100% 100%, 0 100%, 0 20%)">0</div>
+                    <span class="text-xs ml-2 text-gray-600">Answered</span>
+                </div>
+
+                <div class="flex items-center">
+                    <div id="stat-marked" class="w-8 h-8 bg-[#a855f7] rounded-full text-white font-bold flex items-center justify-center shadow-sm">0</div>
+                    <span class="text-xs ml-2 leading-tight text-gray-600">Marked for Review</span>
+                </div>
+                
+                <div class="flex items-center col-span-2 pt-2">
+                    <div class="w-8 h-8 bg-[#a855f7] rounded-full text-white font-bold flex items-center justify-center relative shadow-sm">
+                        <span id="stat-answered-marked">0</span>
+                        <div class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-[#22c55e] rounded-full border border-white"></div>
+                    </div>
+                    <span class="text-xs ml-2 leading-tight text-gray-600">Answered & Marked for Review (will be considered for evaluation)</span>
+                </div>
+
+                </div>
+            </div>
+
+            <div class="bg-blue-600 text-white font-bold p-2 pl-4 text-sm tracking-wide shrink-0">
+                Computer Science
+            </div>
+
+            <!-- Dynamic Number Grid -->
+            <div id="palette-grid" class="flex-1 overflow-y-auto p-4 custom-scrollbar">
+                <!-- Grid Buttons Injection -->
+            </div>
+
+            <!-- Right Bottom Action Bar -->
+            <div class="absolute bottom-0 w-full border-t border-gray-300 bg-white p-3 flex justify-between items-center z-10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] shrink-0">
+                <div class="flex gap-2 w-full justify-between">
+                <button id="btn-back" onclick="handleBack()" class="bg-white text-gray-800 border border-gray-300 font-bold py-1.5 px-3 rounded shadow-sm text-xs flex items-center hover:bg-gray-50 disabled:opacity-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="m15 18-6-6 6-6"/></svg> BACK
+                </button>
+                <button id="btn-next" onclick="handleNext()" class="bg-white text-gray-800 border border-gray-300 font-bold py-1.5 px-3 rounded shadow-sm text-xs flex items-center hover:bg-gray-50 disabled:opacity-50">
+                    NEXT <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+                <button onclick="showResults()" class="bg-[#22c55e] hover:bg-green-600 text-white font-bold py-1.5 px-5 rounded shadow-sm uppercase text-xs border border-green-700 ml-auto">
+                    Submit
+                </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Result Overlay -->
+    <div id="result-screen" class="fixed inset-0 bg-gray-900/50 z-50 hidden flex-col items-center justify-center backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-lg shadow-2xl border border-gray-200 max-w-md w-full text-center">
+            <h1 class="text-3xl font-bold text-blue-600 mb-6">Exam Submitted!</h1>
+            <div class="space-y-4 text-left text-base">
+                <div class="flex justify-between items-center border-b pb-2">
+                    <span class="text-gray-600 font-medium">Total Questions:</span>
+                    <span class="font-bold text-gray-800" id="res-total">100</span>
+                </div>
+                <div class="flex justify-between items-center border-b pb-2">
+                    <span class="text-gray-600 font-medium">Answered:</span>
+                    <span class="font-bold text-green-600" id="res-answered">0</span>
+                </div>
+                <div class="flex justify-between items-center border-b pb-2">
+                    <span class="text-gray-600 font-medium">Not Answered:</span>
+                    <span class="font-bold text-red-500" id="res-not-answered">0</span>
+                </div>
+                <div class="flex justify-between items-center border-b pb-2">
+                    <span class="text-gray-600 font-medium">Marked for Review:</span>
+                    <span class="font-bold text-purple-600" id="res-marked">0</span>
+                </div>
+                <div class="flex justify-between items-center border-b pb-2">
+                    <span class="text-gray-600 font-medium">Answered & Marked:</span>
+                    <span class="font-bold text-purple-600" id="res-answered-marked">0</span>
+                </div>
+                <div class="flex justify-between items-center pt-2">
+                    <span class="text-gray-600 font-medium">Not Visited:</span>
+                    <span class="font-bold text-gray-500" id="res-not-visited">0</span>
+                </div>
+            </div>
+            <button onclick="location.reload()" class="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-8 rounded shadow uppercase text-sm tracking-wider w-full transition-colors">
+                Restart Exam
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        const RAW_PDF_TEXT = `--- PAGE 1 ---
+
+3/6/26, 10:14 PM
+
+Google Gemini
+
+SCQP09: Computer Science and Information Technology
+
+Topical 100-Question Practice Set
+
+1. Thinking, Decision Making & General Aptitude
+
+Topics: Series, Syllogisms, Relationships, and Logical Patterns
+
+1. Find the missing number in the series: 4, 9, 25, 49, 121, ? (1) 144 (2) 169 (3) 196 (4) 225
+
+2. In a certain code, 'COMPUTER' is written as 'RFUVQNPC'. How is 'MEDICINE' written in
+ that code? (1) EOJDJEFM (2) EOJDEJFM (3) MFEJDJOE (4) EOJDJFME
+
+3. Syllogism Statements: (I) All stones are hammers. (II) No hammer is a ring. Conclusion:
+ (1) No stone is a ring. (II) Some rings are hammers. (1) Only I follows (2) Only II follows (3)
+ Both follow (4) Neither follows
+
+4. Point out the odd item: Keyboard, Mouse, Light Pen, Monitor. (1) Keyboard (2) Mouse (3)
+ Light Pen (4) Monitor
+
+5. A is B's sister. C is B's mother. D is C's father. E is D's mother. How is A related to D? (1)
+ Grandfather (2) Daughter (3) Grandmother (4) Granddaughter
+
+6. If the day before yesterday was Thursday, when will Sunday be? (1) Today (2) Tomorrow
+ (3) Day after tomorrow (4) Two days after tomorrow
+
+7. Find the related word: Virology: Virus :: Semantics: ? (1) Nature (2) Language (3) Society
+ (4) Logic
+
+8. Pattern Logic: If a square becomes a triangle, a hexagon becomes a...? (1) Circle (2)
+ Pentagon (3) Octagon (4) Rectangle
+
+9. Statement: Most people who stop smoking gain weight. Conclusion: If one stops
+ smoking, one will gain weight. (1) Conclusion is valid (2) Conclusion is invalid (3) Probably
+ valid (4) Data inadequate
+
+10. A man walks 5km East, turns right and walks 4km, then turns left and walks 5km. Which
+ direction is he facing now? (1) North (2) South (3) East (4) West
+
+11. Identify the missing letter: B, E, H, K, N, ? (1) P (2) Q (3) R (4) S
+
+12. Selection of related numbers: 25:37 :: 49:? (1) 41 (2) 56 (3) 60 (4) 65
+
+13. Assertion: All mammals breathe through lungs. Reason: Whales are mammals. (1) Both A
+
+and R are true (2) A is true, R is false (3) R is true, A is false (4) Both are false
+
+14. Logical Math: If $53=16$; $97=32$; then $10^{*}8=?$ (1) 36 (2) 40 (3) 54 (4) 80
+
+15. In a row of 40 boys, Satish is 14th from the right. What is his position from the left? (1) 24
+ (2) 25 (3) 26 (4) 27
+
+16. Find the odd number: 1, 8, 27, 64, 125, 216, 311. (1) 64 (2) 125 (3) 216 (4) 311
+
+--- PAGE 2 ---
+
+3/6/26, 10:14 PM
+
+Google Gemini
+
+17. A clock shows 4:30. If the minute hand points East, in which direction will the hour hand
+ point? (1) North (2) North-East (3) South-East (4) North-West
+
+18.
+
+Arrange in logical order: 1. Death 2. Marriage 3. Education 4. Birth 5. Funeral. (1) 4, 3, 2, 1,
+ 5 (2) 4, 3, 2, 5, 1 (3) 4, 2, 3, 1, 5 (4) 3, 4, 2, 1, 5
+
+19. Select the odd pair: (1) Bottle:Wine (2) Cup: Tea (3) Pitcher: Water (4) Ball:Bat. (1) Pair 1
+ (2) Pair 2 (3) Pair 3 (4) Pair 4
+
+20.
+
+If 'RAIN' is 'WATER', 'WATER' is 'ROAD', 'ROAD' is 'CLOUD', where do aeroplanes fly? (1)
+ Rain (2) Water (3) Road (4) Cloud
+
+21. Find the number of triangles in a square with both diagonals drawn. (1) 4 (2) 6 (3) 8 (4) 10
+ 22. Find the mirror image of 'EFFECTIVE'. (1) EVITCEFFE (2) EVITCEFFE (reversed) (3) 크네
+
+ (4) None
+
+23. Insert the missing operator: 16? 4? $3=7$ (1), (2)
+
+, (3), (4)-, +
+
+24. A group of letters which is different: ACE, GIK, MOQ, SUV, BDF. (1) ACE (2) GIK (3) MOQ
+ (4) SUV
+
+25. Creative Thinking: Which word cannot be formed from 'ENVIRONMENT'? (1) ENTER (2)
+ METRO (3) MOUNT (4) RENT
+
+II. Mathematics: Set Theory, Probability & Statistics
+
+26. If A and B are sets such that $n(A)=20,n(B)=30$ and $n(A\\cup B)=40,$ find
+ $n(A\\cap B)$. (1) 5 (2) 10 (3) 15 (4) 20
+
+27. A die is thrown. The probability of getting a prime number is: (1) $1/6$ (2) $1/3$ (3) $1/2$ (4)
+ $2/3$
+
+28. The Arithmetic Mean of 10, 20, 30, 40, 50 is: (1) 25 (2) 30 (3) 35 (4) 40
+
+29. The mean deviation of numbers 3, 4, 5, 6, 7 about their mean is: (1) 1.2 (2) 0 (3) 5 (4) 2
+
+30. In a certain distribution, if the sum of 20 natural numbers is calculated, it is: (1) 190 (2)
+ 200 (3) 210 (4) 220
+
+III. Mathematics: Algebra & Progressions
+
+31. If $log_{10}x=3$ then  is: (1) 30 (2) 100 (3) 300 (4) 1000
+
+32. In a G.P. the first term is 2 and the common ratio is 3. The 4th term is: (1) 18 (2) 24 (3) 54
+
+(4) 162
+
+33. The value of 1002 is: (1) 20 (2) 45 (3) 90 (4) 100
+
+34. The solution of $x^{2}-5x+6=0$ are: (1) 2, 3 (2) -2, -3 (3) 1, 6 (4) -1, -6
+
+35. If $2^{x}=16$, then x is: (1) 2 (2) 3 (3) 4 (4) 5
+
+36. The number of ways to arrange 5 people in a row is: (1) 25 (2) 60 (3) 120 (4) 240
+
+37. The determinant of
+
+$|\\begin{matrix}1&2\\\\ 3&4\\end{matrix}|$
+
+is: (1)-2 (2) 2 (3)
+
+(3) 10 (4)-10
+
+38. If A is a square matrix of order 3 and $|A|=5,$ then $|adjA|$ is: (1) 5 (2) 25 (3) 125 (4) 0
+
+--- PAGE 3 ---
+
+3/6/26, 10:14 PM
+
+IV. Mathematics: Coordinate Geometry
+
+Google Gemini
+
+39. Find the distance between points (3, -4) and (-2, 8). (1) 10 (2) 12 (3) 13 (4) 15
+
+40. The eccentricity of a rectangular hyperbola is: (1) 1 (2) $\\sqrt{2}$ (3) 2 (4) 0
+
+41. The slope of the line $3x+4y=12$ is: (1) 3/4 (2)-3/4 (3) $4/3$(4)-4/3
+
+42. The focus of the parabola $y^{2}=12x$ is: (1) (0, 3) (2) (3, 0) (3) (0, -3) (4) (-3, 0)
+
+43. Two lines are perpendicular if: (1) $a_{1}a_{2}+b_{1}b_{2}=0$ (2) $a_{1}/a_{2}=b_{1}/b_{2}$ (3)
+
+$a_{1}b_{2}-a_{2}b_{1}=0$ (4) $a_{1}+a_{2}=0$
+
+44. Find the equation of the circle with center (0,0) and radius 5. (1) $x^{2}+y^{2}=5$ (2)
+ $x^{2}+y^{2}=25$ (3) $x+y=5$ (4) $x^{2}-y^{2}=25$
+
+V. Mathematics: Calculus (Limits, Derivatives, Integration)
+
+45. The value of $lim_{x\\rightarrow0}\\frac{sin~5x}{x}$ is: (1) 1 (2) 0 (3) 5 (4) $1/5$
+
+46. The derivative of $e^{x^{2}}$ is: (1) $2xe^{x^{2}}(2)e^{x^{2}}$ (3) $2e^{x^{2}}$ (4)
+
+$x^{2}e^{x-1}$
+
+47. Find the integration: $\\int\\frac{1}{x}dx$. (1) $x^{2}$ (2) $log~x+C$ (3) 1 (4) $-1/x^{2}$
+
+48. The maximum value of $sin~x+cos~x$ is: (1) 1 (2) 2 (3) $\\sqrt{2}$ (4) $1/\\sqrt{2}$
+
+49. If $f(x)=x^{3}-3x^{2}+4$ the point of local minima is at: (1)
+
+(4) $x=3$
+
+$x=0$ (2) $x=1$ (3)
+
+$x=2$
+
+50. The area bounded by $y=x^{2}$, the x-axis, and $x=1$ $x=2$ is: (1) $7/3$ (2) $8/3$
+ 51. Find the limit: $lim_{x\\rightarrow\\infty}\\frac{2x^{2}+3}{5x^{2}-1}$ . . (1) 0 (2) 0∞ (3) 2/5 (4) 3/-1
+
+52. The derivative of tan x is: (1) cot x (2) sec x (3) sec² x (4) csc² x
+
+(3) 1 (4) 3
+
+53. The range of the function $f(x)=sin~x$ zis: (1) $[0,1](2)[-1,1](3)(-\\infty,\\infty)(4)[0,\\infty$)
+
+54. Integration of cos xdx is: (1) sin x + C (2)  sinx + C (3) tan $x+C$ (4) sec $x+C$
+
+55. The maximum value of $f(x)=sin~x$ in $[0,\\pi]$ exists at: (1) $\\pi/6$ (2) $\\pi/3$ (3) $\\pi/2$ (4) $\\pi/4$
+
+VI. Operating Systems
+
+56. Which of the following is NOT an operating system? (1) Linux (2) Windows (3) Oracle (4)
+ DOS
+
+57. The process of loading an OS into memory is called: (1) Mapping (2) Booting (3)
+ Scheduling (4) Caching
+
+58. A Banker's algorithm is used for: (1) Deadlock prevention (2) Deadlock avoidance (3)
+ Deadlock detection (4) Deadlock removal
+
+59. The layer of the OS that interacts directly with hardware is: (1) Shell (2) Kernel (3) GUI (4)
+ File System
+
+60. Virtual memory is physically stored on: (1) RAM (2) ROM (3) Hard Disk (4) Cache
+
+61. A thread is often called a: (1) Heavyweight process (2) Lightweight process (3) Data
+ segment (4) Code block
+
+--- PAGE 4 ---
+
+3/6/26, 10:14 PM
+
+Google Gemini
+
+62. A situation where a process waits forever for a resource is: (1) Starvation (2) Deadlock (3)
+ Paging (4) Swapping
+
+63. Which scheduling algorithm is non-preemptive? (1) Round Robin (2) SRTF (3) FCFS (4)
+ Priority (Preemptive)
+
+64. What is 'Thrashing' in OS? (1) Excessive Paging (2) High CPU usage (3) Memory leak (4)
+ System crash
+
+65. Which file system is used by Windows? (1) EXT4 (2) HFS (3) NTFS (4) APFS
+
+66. In paging, memory is divided into fixed-size blocks called: (1) Pages (2) Frames (3)
+ Segments (4) Slots
+
+67. The time slice is a term related to: (1) FCFS (2) SJF (3) Round Robin (4) Priority
+
+68. Which command is used in UNIX to list files? (1) list (2) Is (3) dir (4) show
+
+69. Memory-mapped I/O systems do not typically have which instruction? (1) LDA (2) IN (3)
+ ADD (4) OUT
+
+70. Which memory provides the highest speed access to the CPU? (1) RAM (2) ROM (3)
+ Cache (4) Hard Disk
+
+VII. Data Structures
+
+71. Which data structure is best for implementing recursion? (1) Queue (2) Stack (3) Tree (4)
+ Graph
+
+72. The time complexity of binary search on a sorted array is: (1) $O(n)(2)O(n^{2})$ (3)
+ $O(log~n)$ (4) $O(1)$
+
+73. A Stack follows which order? (1) FIFO (2) LILO (3) LIFO (4) Random
+
+74. In a Binary Search Tree (BST), the left child is always: (1) Greater than parent (2) Smaller
+ than parent (3) Equal to parent (4) None
+
+75. The height of a balanced binary tree with N nodes is: (1) N (2) $N/2$ (3) $log_{2}$ N (4)
+
+$N^{2}$
+
+76. Which sorting algorithm has the best average-case performance? (1) Bubble Sort (2)
+
+Selection Sort (3) Quick Sort (4) Insertion Sort
+
+77. Sparse matrix has: (1) Many zero elements (2) Many non-zero elements (3) No zero
+ elements (4) Only one row
+
+78. A linked list where the last node points back to the first is: (1) Doubly linked (2) Singly
+ linked (3) Circular linked (4) Priority linked
+
+79. The 'delete' operation in a Queue is called: (1) Push (2) Pop (3) Enqueue (4) Dequeue
+
+80. A graph with no cycles is called: (1) Forest (2) Tree (3) Path (4) Bipartite
+
+81. The number of edges in a tree with n vertices is: (1) n (2) $n-1$ (3) $n+1$ (4) 2η
+
+82. A complete binary tree has every level filled except possibly the: (1) Root (2) Middle (3)
+ Last (4) None
+
+--- PAGE 5 ---
+
+3/6/26, 10:14 PM
+
+Google Gemini
+
+83. Which data structure allows insertion/deletion at both ends? (1) Stack (2) Queue (3)
+ Deque (4) List
+
+84. Which is a sorting algorithm that uses the 'Divide and Conquer' strategy? (1) Bubble (2)
+ Selection (3) Merge Sort (4) Insertion
+
+85. What is the worst-case time complexity of Quick Sort? (1) $O(n~log~n)$ (2) $O(n)$ (3)
+ $O(n^{2})$ (4) $O(log~n)$
+
+VIII. Digital Fundamentals & Computer Architecture
+
+86. In 2's complement representation, the MSB '1' indicates: (1) Zero (2) Positive Number (3)
+
+Negative Number (4) Overflow
+
+87. Convert binary $(1010)_{2}$ to hexadecimal. (1) 8 (2) A (3) C (4)
+
+F
+
+88. Which gate is known as a Universal Gate? (1) AND (2) OR (3) NAND (4) XOR
+
+89. What is the result of $1+1$ in binary arithmetic? (1) 1 (2) 2 (3) 10 (4) 11
+
+90. The binary equivalent of decimal 25 is: (1) 11001 (2) 11011 (3) 10101 (4) 11111
+
+91. Which register holds the current instruction being executed? (1) PC (2) IR (3) MAR (4)
+ MDR
+
+92. What is the decimal equivalent of binary 111? (1) 3 (2) 5 (3) 7 (4) 8
+
+93. Which memory is non-volatile? (1) RAM (2) Cache (3) ROM (4) Registers
+
+94. In K-Maps, a group of 8 adjacent cells is called a: (1) Pair (2) Quad (3) Octet (4) Byte
+
+95. 1 KB (Kilobyte) is equal to: (1) 1000 bytes (2) 1024 bytes (3) 512 bytes (4) 2048 bytes
+ 96. Which logic circuit is used for addition? (1) Decoder (2) Multiplexer (3) Adder (4) Counter
+
+97. Gray code for decimal 2 is: (1) 00 (2) 01 (3) 11 (4) 10
+
+SR (2) JK (3) D (4) All of these
+
+98. Which flip-flop is used to store 1 bit of data? (1)
+ 99. What is the result of binary 1011 AND 1101? (1) 1111 (2) 1001 (3) 0000 (4) 1100
+ 100. Boolean $A+A^{\\prime}$ equals: (1) 0 (2) 1 (3) A (4) Α'
+
+Short Answer Key
+
+1(2), 2(1), 3(1), 4(4), $5(4)$, 6(2), $7(2)$, $8(2)$, 9(2), 10(3), 11(2), 12(4), 13(1), 14(1), 15(4), 16(4), $17(2)$,
+ 18(1), 19(4), 20(3), 21(3), 22(2), 23(2), 24(4), 25(2), 26(2), 27(3), 28(2), 29(1), 30(3), 31(4), 32(3),
+ 33(2), 34(1), 35(3), 36(3), 37(1), 38(2), 39(3), 40(2), 41(2), 42(2), 43(1), 44(2), 45(3), 46(1), 47(2),
+ 48(3), 49(3), 50(1), 51(3), 52(3), 53(2), 54(1), 55(3), 56(3), 57(2), 58(2), 59(2), 60(3), 61(2), 62(2),
+
+https://gemini.google.com/app/3cba99dc5f918003
+
+5/5`;
+
+        // ==========================================
+        // PARSER
+        // ==========================================
+        function parseQuestions(rawText) {
+            // Remove the answer key segment to avoid conflicts
+            let cleanText = rawText.split(/Short Answer Key|Answer Key/i)[0];
+
+            cleanText = cleanText
+                .replace(/--- PAGE \d+ ---/g, '')
+                .replace(/\d{1,2}\/\d{1,2}\/\d{2}, \d{1,2}:\d{2} [AP]M/g, '')
+                .replace(/Google Gemini/g, '')
+                .replace(/https:\/\/gemini\.google\.com\/app\/[a-zA-Z0-9]+/g, '')
+                .replace(/SCQP09: Computer Science.*/g, '')
+                .replace(/Topical 100-Question Practice Set.*/g, '')
+                .replace(/Comprehensive Practice Set.*/g, '')
+                .replace(/[IVX]+\. Mathematics:.*/g, '')
+                .replace(/[IVX]+\. Operating Systems.*/g, '')
+                .replace(/[IVX]+\. Data Structures.*/g, '')
+                .replace(/[IVX]+\. Digital Fundamentals.*/g, '')
+                .replace(/[IVX]+\. Advanced Technical.*/g, '')
+                .replace(/\d+\. Thinking(,| and) Decision Making.*/g, '')
+                .replace(/Topics:.*/g, '');
+
+            // Split strictly at line beginnings followed by "Number. "
+            const blocks = cleanText.split(/\n(?=\d+\.\s)/);
+            const parsedQuestions = [];
+
+            blocks.forEach(block => {
+                const trimmed = block.trim();
+                if (!trimmed) return;
+
+                const match = trimmed.match(/^(\d+)\.\s/);
+                if (!match) return;
+
+                const qId = parseInt(match[1], 10);
+                
+                // Matches the pattern: (1) option (2) option (3) option (4) option
+                const optRegex = /\(1\)([\s\S]*?)\(2\)([\s\S]*?)\(3\)([\s\S]*?)\(4\)([\s\S]*)$/;
+                const optMatch = trimmed.match(optRegex);
+                
+                let qText = trimmed;
+                const options = [];
+
+                if (optMatch) {
+                    qText = trimmed.substring(0, optMatch.index).trim();
+                    options.push(optMatch[1].trim());
+                    options.push(optMatch[2].trim());
+                    options.push(optMatch[3].trim());
+                    options.push(optMatch[4].trim());
+                }
+
+                parsedQuestions.push({
+                    id: qId,
+                    text: qText,
+                    options: options.length === 4 ? options : ["Option 1", "Option 2", "Option 3", "Option 4"]
+                });
+            });
+
+            // Ensure 100 questions exist securely
+            const finalQuestions = [];
+            for (let i = 1; i <= 100; i++) {
+                const found = parsedQuestions.find(q => q.id === i);
+                finalQuestions.push(found || { id: i, text: `[Parsed Fallback] Question ${i}`, options: ["1", "2", "3", "4"] });
+            }
+
+            return finalQuestions;
+        }
+
+        // ==========================================
+        // STATE MANAGEMENT
+        // ==========================================
+        const STATUS = {
+            NOT_VISITED: 'not_visited',
+            NOT_ANSWERED: 'not_answered',
+            ANSWERED: 'answered',
+            MARKED: 'marked',
+            ANSWERED_MARKED: 'answered_marked'
+        };
+
+        let state = {
+            questions: parseQuestions(RAW_PDF_TEXT),
+            currentIndex: 0,
+            answers: {},
+            statuses: {},
+            timeLeft: 7200 // 2 hours in seconds
+        };
+
+        let timerInterval;
+
+        // ==========================================
+        // RENDER LOGIC
+        // ==========================================
+        function formatMathText(text) {
+            return text.split('\n').map(line => {
+                const parts = line.split('$').map((part, index) => {
+                    return index % 2 !== 0 ? `<em class="font-serif font-bold text-gray-800">${part}</em>` : part;
+                }).join('');
+                return `<span class="block mb-2">${parts}</span>`;
+            }).join('');
+        }
+
+        function renderQuestion() {
+            const currentQ = state.questions[state.currentIndex];
+            
+            // Mark as Not Answered if visiting for first time
+            if (!state.statuses[currentQ.id]) {
+                state.statuses[currentQ.id] = STATUS.NOT_ANSWERED;
+                renderPalette();
+            }
+
+            document.getElementById('q-id-display').innerText = currentQ.id;
+            document.getElementById('q-text-container').innerHTML = formatMathText(currentQ.text);
+
+            let optionsHtml = '';
+            currentQ.options.forEach((opt, i) => {
+                optionsHtml += `
+                    <div class="flex text-lg font-medium text-black items-start">
+                        <span class="mr-4 mt-0.5">${i + 1}.</span>
+                        <div class="flex-1">${formatMathText(opt)}</div>
+                    </div>`;
+            });
+            document.getElementById('q-options-container').innerHTML = optionsHtml;
+
+            renderRadioButtons();
+
+            // Disable back/next buttons at limits
+            document.getElementById('btn-back').disabled = state.currentIndex === 0;
+            document.getElementById('btn-next').disabled = state.currentIndex === state.questions.length - 1;
+        }
+
+        function renderRadioButtons() {
+            const currentQ = state.questions[state.currentIndex];
+            let radioHtml = '';
+            
+            [1, 2, 3, 4].forEach(optNum => {
+                const isSelected = state.answers[currentQ.id] === optNum;
+                const borderClass = isSelected ? 'border-blue-600 bg-blue-600' : 'border-gray-400 group-hover:border-blue-400';
+                const innerDot = isSelected ? '<div class="w-2 h-2 bg-white rounded-full"></div>' : '';
+                
+                radioHtml += `
+                    <label onclick="handleOptionSelect(${optNum})" class="flex items-center space-x-3 cursor-pointer group">
+                        <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${borderClass}">
+                           ${innerDot}
+                        </div>
+                        <span class="font-bold text-lg text-gray-700 select-none group-hover:text-blue-600">${optNum})</span>
+                    </label>
+                `;
+            });
+            document.getElementById('radio-buttons-container').innerHTML = radioHtml;
+        }
+
+        function renderPalette() {
+            let stats = {
+                [STATUS.NOT_VISITED]: state.questions.length - Object.keys(state.statuses).length,
+                [STATUS.NOT_ANSWERED]: 0,
+                [STATUS.ANSWERED]: 0,
+                [STATUS.MARKED]: 0,
+                [STATUS.ANSWERED_MARKED]: 0,
+            };
+
+            let gridHtml = '<div class="grid grid-cols-5 gap-3">';
+            
+            state.questions.forEach((q, idx) => {
+                const stat = state.statuses[q.id] || STATUS.NOT_VISITED;
+                if (stat !== STATUS.NOT_VISITED) stats[stat]++;
+
+                let bgClass = "bg-[#e5e7eb] border-gray-300 text-gray-800 rounded border";
+                let styleStr = "";
+                let extraHtml = "";
+
+                if (stat === STATUS.NOT_ANSWERED) {
+                    bgClass = "bg-[#ef4444] text-white border-none";
+                    styleStr = "clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%);";
+                } else if (stat === STATUS.ANSWERED) {
+                    bgClass = "bg-[#22c55e] text-white border-none";
+                    styleStr = "clip-path: polygon(50% 0, 100% 20%, 100% 100%, 0 100%, 0 20%);";
+                } else if (stat === STATUS.MARKED) {
+                    bgClass = "bg-[#a855f7] text-white rounded-full border-none";
+                } else if (stat === STATUS.ANSWERED_MARKED) {
+                    bgClass = "bg-[#a855f7] text-white rounded-full border-none relative";
+                    extraHtml = '<div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#22c55e] rounded-full"></div>';
+                }
+
+                const ringClass = state.currentIndex === idx ? 'ring-2 ring-offset-1 ring-blue-500' : '';
+
+                gridHtml += `
+                    <button 
+                        onclick="setCurrentIndex(${idx})"
+                        class="w-10 h-10 flex items-center justify-center text-sm font-bold shadow-sm transition-transform hover:scale-105 ${bgClass} ${ringClass}"
+                        style="${styleStr}"
+                    >
+                        ${q.id}
+                        ${extraHtml}
+                    </button>
+                `;
+            });
+            gridHtml += '</div>';
+            
+            document.getElementById('palette-grid').innerHTML = gridHtml;
+
+            // Update stats
+            document.getElementById('stat-not-visited').innerText = stats[STATUS.NOT_VISITED];
+            document.getElementById('stat-not-answered').innerText = stats[STATUS.NOT_ANSWERED];
+            document.getElementById('stat-answered').innerText = stats[STATUS.ANSWERED];
+            document.getElementById('stat-marked').innerText = stats[STATUS.MARKED];
+            document.getElementById('stat-answered-marked').innerText = stats[STATUS.ANSWERED_MARKED];
+        }
+
+        function renderTimer() {
+            const h = Math.floor(state.timeLeft / 3600);
+            const m = Math.floor((state.timeLeft % 3600) / 60);
+            const s = state.timeLeft % 60;
+            const formatted = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            document.getElementById('timer-display').innerText = formatted;
+        }
+
+        // ==========================================
+        // HANDLERS
+        // ==========================================
+        function handleOptionSelect(optionIndex) {
+            const currentQId = state.questions[state.currentIndex].id;
+            state.answers[currentQId] = optionIndex;
+            renderRadioButtons();
+        }
+
+        function handleClear() {
+            const currentQId = state.questions[state.currentIndex].id;
+            delete state.answers[currentQId];
+            renderRadioButtons();
+        }
+
+        function setCurrentIndex(idx) {
+            state.currentIndex = idx;
+            renderQuestion();
+            renderPalette();
+        }
+
+        function handleSaveAndNext() {
+            const currentQId = state.questions[state.currentIndex].id;
+            const hasAnswer = state.answers[currentQId] !== undefined;
+            state.statuses[currentQId] = hasAnswer ? STATUS.ANSWERED : STATUS.NOT_ANSWERED;
+            
+            if (state.currentIndex < state.questions.length - 1) {
+                setCurrentIndex(state.currentIndex + 1);
+            } else {
+                renderPalette();
+            }
+        }
+
+        function handleSaveAndMarkForReview() {
+            const currentQId = state.questions[state.currentIndex].id;
+            const hasAnswer = state.answers[currentQId] !== undefined;
+            state.statuses[currentQId] = hasAnswer ? STATUS.ANSWERED_MARKED : STATUS.MARKED;
+            
+            if (state.currentIndex < state.questions.length - 1) {
+                setCurrentIndex(state.currentIndex + 1);
+            } else {
+                renderPalette();
+            }
+        }
+
+        function handleMarkForReviewAndNext() {
+            const currentQId = state.questions[state.currentIndex].id;
+            const hasAnswer = state.answers[currentQId] !== undefined;
+            state.statuses[currentQId] = hasAnswer ? STATUS.ANSWERED_MARKED : STATUS.MARKED;
+
+            if (state.currentIndex < state.questions.length - 1) {
+                setCurrentIndex(state.currentIndex + 1);
+            } else {
+                renderPalette();
+            }
+        }
+
+        function handleBack() {
+            if (state.currentIndex > 0) setCurrentIndex(state.currentIndex - 1);
+        }
+
+        function handleNext() {
+            if (state.currentIndex < state.questions.length - 1) setCurrentIndex(state.currentIndex + 1);
+        }
+
+        function showResults() {
+            clearInterval(timerInterval);
+            
+            let stats = {
+                [STATUS.NOT_VISITED]: state.questions.length - Object.keys(state.statuses).length,
+                [STATUS.NOT_ANSWERED]: 0,
+                [STATUS.ANSWERED]: 0,
+                [STATUS.MARKED]: 0,
+                [STATUS.ANSWERED_MARKED]: 0,
+            };
+
+            state.questions.forEach((q) => {
+                const stat = state.statuses[q.id] || STATUS.NOT_VISITED;
+                if (stat !== STATUS.NOT_VISITED) stats[stat]++;
+            });
+
+            document.getElementById('res-total').innerText = state.questions.length;
+            document.getElementById('res-answered').innerText = stats[STATUS.ANSWERED];
+            document.getElementById('res-not-answered').innerText = stats[STATUS.NOT_ANSWERED];
+            document.getElementById('res-marked').innerText = stats[STATUS.MARKED];
+            document.getElementById('res-answered-marked').innerText = stats[STATUS.ANSWERED_MARKED];
+            document.getElementById('res-not-visited').innerText = stats[STATUS.NOT_VISITED];
+
+            const resultScreen = document.getElementById('result-screen');
+            resultScreen.classList.remove('hidden');
+            resultScreen.classList.add('flex');
+        }
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+        function init() {
+            timerInterval = setInterval(() => {
+                if (state.timeLeft > 0) {
+                    state.timeLeft--;
+                    renderTimer();
+                    
+                    if (state.timeLeft === 0) {
+                        showResults();
+                    }
+                }
+            }, 1000);
+
+            renderQuestion();
+            renderPalette();
+        }
+
+        window.onload = init;
+
+    </script>
+</body>
+</html>
