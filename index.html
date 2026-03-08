@@ -232,6 +232,10 @@
                     <span class="text-gray-600 font-medium">Not Visited:</span>
                     <span class="font-bold text-gray-500" id="res-not-visited">0</span>
                 </div>
+                <div class="flex justify-between items-center border-t pt-2 mt-2">
+                    <span class="text-gray-600 font-medium">Score:</span>
+                    <span class="font-bold text-blue-600" id="res-score">0 out of 100</span>
+                </div>
             </div>
             <button onclick="location.reload()" class="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-8 rounded shadow uppercase text-sm tracking-wider w-full transition-colors">
                 Restart Exam
@@ -848,6 +852,28 @@ https://gemini.google.com/app/3cba99dc5f918003
             document.getElementById('res-marked').innerText = stats[STATUS.MARKED];
             document.getElementById('res-answered-marked').innerText = stats[STATUS.ANSWERED_MARKED];
             document.getElementById('res-not-visited').innerText = stats[STATUS.NOT_VISITED];
+
+            // Compute score using embedded Short Answer Key in RAW_PDF_TEXT
+            const answerKey = {};
+            const keyMatch = RAW_PDF_TEXT.match(/Short Answer Key([\s\S]*)$/i);
+            if (keyMatch) {
+                const keyText = keyMatch[1];
+                let m;
+                const re = /(\d+)\((\d+)\)/g;
+                while ((m = re.exec(keyText)) !== null) {
+                    answerKey[parseInt(m[1], 10)] = parseInt(m[2], 10);
+                }
+            }
+
+            let correctCount = 0;
+            state.questions.forEach(q => {
+                const given = state.answers[q.id];
+                const correctAns = answerKey[q.id];
+                if (given !== undefined && correctAns !== undefined && given === correctAns) correctCount++;
+            });
+
+            const percent = Math.round((correctCount / state.questions.length) * 100);
+            document.getElementById('res-score').innerText = `${percent} out of 100`;
 
             const resultScreen = document.getElementById('result-screen');
             resultScreen.classList.remove('hidden');
